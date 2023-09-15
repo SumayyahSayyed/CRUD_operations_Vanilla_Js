@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal</title>
+
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="#">Users</a></li>
+            <li class="search-bar">
+                <input type="text" name="search" id="search">
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <table id="searchContainer" class="none searchTable">
+
+        </table>
+        <h2 id="users-main-heading">Users</h2>
+        <table id="usersTable" class="usersTable">
+        </table>
+
+        <button class="btn name addNewUser">
+            <a href="../register.html">Add New User</a>
+        </button>
+
+        <div id="mainDiv" class="mainDiv hide">
+            <img id="projectImage" src="" alt="project image">
+            <div>
+                <h3 id="projectHeading"></h3>
+                <p id="projectDescription"></p>
+
+                <button class="btn name">
+                    <a href="" target="_blank" id="seeLive">See Live</a>
+                </button>
+                <button class="code-btn name">
+                    <a href="" target="_blank" id="repoLink">Source Code</a>
+                </button>
+
+            </div>
+        </div>
+        <form id="project-form" class="project-form hide">
+            <div class="project-setting">
+                <h3>Project Settings</h3>
+                <img id="cross-icon" src="../../Portfolio Website//assets/editable-icon/cross.png" alt="">
+            </div>
+            <div class="input-fields">
+                <div>
+                    <label class="fieldLabel" for="projectName">Project Name</label>
+                    <input type="text" name="projectName" id="projectName" onfocus="removeErrorMessage()">
+                </div>
+                <div>
+                    <label class="fieldLabel" for="projectDescription">Project Description</label>
+                    <textarea name="projectDescription" id="projectDescription" cols="30" rows="5"
+                        onfocus="removeErrorMessage()"></textarea>
+                </div>
+                <div>
+                    <label class="fieldLabel" for="linkToLiveWebsite">Live Website URL</label>
+                    <input type="text" name="linkToLiveWebsite" id="linkToLiveWebsite" onfocus="removeErrorMessage()">
+                </div>
+                <div>
+                    <label class="fieldLabel" for="linkToRepo">Github Repository Link</label>
+                    <input type="text" name="linkToRepo" id="linkToRepo" onfocus="removeErrorMessage()">
+                </div>
+                <div class="ending-div">
+                    <div>
+                        <label class="fieldLabel" for="projectImage">Project Image</label>
+                        <input type="file" id="file" name="file" accept="image/*" onchange='openFile(event)'
+                            onfocus="removeErrorMessage()" />
+                    </div>
+                    <button id="addProject" class="btn addProjectBtn">Add</button>
+                </div>
+            </div>
+        </form>
+
+        <form id="register-form" class="register-form hide">
+            <div class="row-1">
+                <div class="input-group">
+                    <label class="label" for="firstname">First name</label>
+                    <input type="text" name="firstname" id="firstname">
+                </div>
+                <div class="input-group">
+                    <label class="label" for="lastname">Last name</label>
+                    <input type="text" name="lastname" id="lastname">
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="label" for="email">Email</label>
+                <input type="email" name="email" id="email">
+            </div>
+            <div class="input-group">
+                <label class="label" for="password">Password</label>
+                <input type="password" name="password" id="password">
+            </div>
+            <button id="submit-button" class="btn">Update</button>
+        </form>
+    </main>
+    <script src="admin.js"></script>
+</body>
+
+</html>
