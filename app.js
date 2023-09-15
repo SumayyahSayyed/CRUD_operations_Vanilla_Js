@@ -47,10 +47,10 @@ submit.addEventListener("submit", (e) => {
             sessionStorage.setItem("id", data.id);
 
             if (data.userEmail === "admin123@gmail.com" && data.userPassword === "admin123") {
-                window.location.href = "./Admin/admin.html";
+                window.location.href = "./Website/Admin/admin.html";
             }
             else {
-                window.location.href = "./Social Links/index.html";
+                window.location.href = "./Website/Social Links/index.html";
             }
         }
     }
