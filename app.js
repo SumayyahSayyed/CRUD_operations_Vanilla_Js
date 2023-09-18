@@ -11,10 +11,10 @@ submit.addEventListener("submit", (e) => {
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
 
-    if (!fName || !lName || !phone || !email || !password) {
-        validateForm(fName, lName, phone, email, password);
-    }
-    else {
+    let isTrue = validateForm(fName, lName, phone, email, password);
+
+    if (isTrue) {
+
         let data = {
             id: generateId(),
             firstName: fName,
@@ -26,7 +26,7 @@ submit.addEventListener("submit", (e) => {
 
         // Retrieving existing users from localStorage
         let users = JSON.parse(localStorage.getItem('user')) || [];
-        console.log(users);
+        // console.log(users);
         let exists = false;
 
         for (let user of users) {
@@ -54,9 +54,11 @@ submit.addEventListener("submit", (e) => {
             }
         }
     }
+    else {
+        isTrue = validateForm(fName, lName, phone, email, password);
+    }
 
 })
-
 
 function removeErrorMessage() {
     const errorLabel = document.querySelector(".error-message");
@@ -65,7 +67,9 @@ function removeErrorMessage() {
     }
 }
 function validateForm(fName, lName, phone, email, password) {
+    removeErrorMessage();
     let errorLabel = document.querySelector(".error-message");
+    console.log(fName);
 
     if (fName == "" && !errorLabel) {
         let select = document.querySelector('input[name="firstname"]');
@@ -75,7 +79,17 @@ function validateForm(fName, lName, phone, email, password) {
         errorLabel.style.color = "red";
 
         select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
+    }
+    else if (fName && /[^A-Za-z]/.test(fName) && !errorLabel) {
+        let select = document.querySelector('input[name="firstname"]');
+        errorLabel = document.createElement("label");
+        errorLabel.classList.add("error-message");
+        errorLabel.innerText = "Name cannot contain numbers or special characters";
+        errorLabel.style.color = "red";
 
+        select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
     }
     else if (lName == "" && !errorLabel) {
         let select = document.querySelector('input[name="lastname"]');
@@ -85,6 +99,18 @@ function validateForm(fName, lName, phone, email, password) {
         errorLabel.style.color = "red";
 
         select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
+
+    }
+    else if (lName && /[^A-Za-z]/.test(lName) && !errorLabel) {
+        let select = document.querySelector('input[name="lastname"]');
+        errorLabel = document.createElement("label");
+        errorLabel.classList.add("error-message");
+        errorLabel.innerText = "Name cannot contain numbers or special characters";
+        errorLabel.style.color = "red";
+
+        select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
     }
     else if (phone == "" && !errorLabel) {
         let select = document.querySelector('input[name="phone"]');
@@ -94,6 +120,17 @@ function validateForm(fName, lName, phone, email, password) {
         errorLabel.style.color = "red";
 
         select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
+    }
+    else if (phone && /[^0-9]/.test(phone) && !errorLabel) {
+        let select = document.querySelector('input[name="phone"]');
+        errorLabel = document.createElement("label");
+        errorLabel.classList.add("error-message");
+        errorLabel.innerText = "Phone Number cannot contain alphabets or special numbers";
+        errorLabel.style.color = "red";
+
+        select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
     }
     else if (email == "" && !errorLabel) {
         let select = document.querySelector('input[name="email"]');
@@ -103,6 +140,18 @@ function validateForm(fName, lName, phone, email, password) {
         errorLabel.style.color = "red";
 
         select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
+
+    }
+    else if (email && !/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email) && !errorLabel) {
+        let select = document.querySelector('input[name="email"]');
+        errorLabel = document.createElement("label");
+        errorLabel.classList.add("error-message");
+        errorLabel.innerText = "Invalid email address";
+        errorLabel.style.color = "red";
+
+        select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
     }
     else if (password == "" && !errorLabel) {
         let select = document.querySelector('input[name="password"]');
@@ -112,5 +161,8 @@ function validateForm(fName, lName, phone, email, password) {
         errorLabel.style.color = "red";
 
         select.parentElement.insertAdjacentElement('beforeend', errorLabel);
+        return false;
     }
+
+    return true;
 }

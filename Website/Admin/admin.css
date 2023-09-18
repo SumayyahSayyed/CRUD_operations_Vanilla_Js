@@ -71,7 +71,8 @@ h2 {
     font-size: 2rem;
 }
 
-#userTable {
+#userTable,
+#projectsTable {
     border-collapse: collapse;
     width: 100%;
 }
@@ -99,7 +100,8 @@ h2 {
     color: white;
 }
 
-#usersTable tr:nth-child(even) {
+#usersTable tr:nth-child(even),
+#projectsTable tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
@@ -139,6 +141,29 @@ img {
     padding: .7em .75em;
 }
 
+.main-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+#cross-view-project {
+    width: 15px;
+    margin-left: auto;
+    padding: 1em;
+    margin-bottom: .5em;
+}
+
+#cross-search {
+    width: 15px;
+    /* margin-left: auto; */
+    padding: 1em;
+}
+
+#cross-view-project:hover,
+#cross-search:hover {
+    background-color: rgb(230, 230, 230);
+    cursor: pointer;
+}
 
 /* ------------------------------------------------------ */
 

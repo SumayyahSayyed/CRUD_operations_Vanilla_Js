@@ -1,3 +1,9 @@
+// function preventGoingBack() {
+//     window.history.forward();
+// }
+// setTimeout("preventGoingBack()", 0);
+// window.onunload = function () { null };
+
 let submit = document.getElementById("register-form");
 
 submit.addEventListener("submit", (e) => {

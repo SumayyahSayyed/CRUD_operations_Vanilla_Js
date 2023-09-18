@@ -3,25 +3,38 @@ let fetchusersData = JSON.parse(localStorage.getItem("user"));
 let fetchusersProject = JSON.parse(localStorage.getItem("projects"));
 let fetchusersContent = JSON.parse(localStorage.getItem("editable-content"));
 
-let usersMainHeading = document.getElementById("users-main-heading")
+let usersMainHeading = document.getElementById("users-main-heading");
+
+let usersTab = document.getElementById("usersTab");
+usersTab.addEventListener("click", () => {
+    usersTab.style.color = "#1d3be3";
+    projectsTab.style.color = "#000";
+    let usersDiv = document.getElementById("usersDiv");
+    let projectsDiv = document.getElementById("projectsDiv");
+
+    projectsDiv.classList.add("hide");
+    usersDiv.classList.remove("hide");
+})
+
+
 
 let tableRow = document.createElement("tr");
 let userName = document.createElement("th");
 let userEmail = document.createElement("th");
-let userProjects = document.createElement("th");
+let userPhone = document.createElement("th");
 let action = document.createElement("th");
 
 tableRow.classList.add("main-row");
 
 userName.innerHTML = "Name";
 userEmail.innerHTML = "Email";
-userProjects.innerHTML = "Projects";
+userPhone.innerHTML = "Phone";
 action.innerHTML = "Actions";
 
 usersTable.appendChild(tableRow);
 tableRow.appendChild(userName);
 tableRow.appendChild(userEmail);
-tableRow.appendChild(userProjects);
+tableRow.appendChild(userPhone);
 tableRow.appendChild(action);
 
 
@@ -32,12 +45,14 @@ for (let eachuser of fetchusersData) {
 
     let nameData = document.createElement("td");
     let emailData = document.createElement("td");
+    let phoneData = document.createElement("td");
     let actionData = document.createElement("td");
 
     if (eachuser.userEmail !== "admin123@gmail.com") {
 
         nameData.innerHTML = eachuser.firstName + " " + eachuser.lastName;
         emailData.innerHTML = eachuser.userEmail;
+        phoneData.innerHTML = eachuser.userPhone;
 
         let iconDiv = document.createElement("div");
         let editIcon = document.createElement("img");
@@ -55,85 +70,15 @@ for (let eachuser of fetchusersData) {
         usersTable.appendChild(dataRow);
         dataRow.appendChild(nameData);
         dataRow.appendChild(emailData);
-
-        let projectData = document.createElement("td");
-
-        for (let eachproject of fetchusersProject) {
-            if (eachuser.id === eachproject.projectID) {
-
-                let projectsList = document.createElement("ul");
-                let listData = document.createElement("li");
-
-                projectData.classList.add("project-data");
-                projectsList.classList.add("project-ul");
-                listData.classList.add("project-li");
-
-                listData.innerHTML = eachproject.projectNameData;
-
-                let viewIconDiv = document.createElement("div");
-                let viewIcon = document.createElement("img");
+        dataRow.appendChild(phoneData);
 
 
-                viewIcon.setAttribute("src", "../../Portfolio Website/assets/editable-icon/eye.png");
-                viewIconDiv.classList.add("view-icon-div")
-                viewIcon.classList.add("view-icon");
-
-                projectData.appendChild(projectsList);
-
-                viewIconDiv.appendChild(viewIcon);
-                listData.appendChild(viewIconDiv);
-                projectsList.appendChild(listData);
-                dataRow.appendChild(projectData);
-            }
-
-        }
         iconDiv.appendChild(editIcon);
         iconDiv.appendChild(deleteIcon);
         actionData.appendChild(iconDiv);
         dataRow.appendChild(actionData);
     }
 }
-
-// viewFullProject(){
-let view = document.querySelectorAll(".view-icon");
-let projectView = document.getElementById("mainDiv");
-let addNewUser = document.querySelector(".addNewUser");
-let pageMainHeading = document.getElementById("users-main-heading");
-
-document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("view-icon")) {
-        usersTable.style.display = "none";
-        addNewUser.classList.add("hide");
-        projectView.classList.remove("hide");
-        // pageMainHeading.classLists.add("hide");
-        document.body.style.backgroundColor = "rgba(173, 173, 173, 0.171)";
-
-        let listContent = e.target.closest('li').textContent;
-
-        for (let eachproject of fetchusersProject) {
-
-            if (eachproject.projectNameData === listContent) {
-                let projectImage = document.getElementById("projectImage");
-                let projectHeading = document.getElementById("projectHeading");
-                let pDescription = document.getElementById("projectDescription");
-                let seeLive = document.getElementById("seeLive");
-                let repoLink = document.getElementById("repoLink");
-
-
-                projectImage.setAttribute('src', eachproject.projectImg);
-                projectHeading.innerHTML = eachproject.projectNameData;
-                pDescription.innerHTML = eachproject.projectDescription;
-                seeLive.setAttribute('href', eachproject.projectLiveLink);
-                repoLink.setAttribute('href', eachproject.projectRepo);
-            }
-        }
-    } else if (!e.target.classList.contains("mainDiv")) {
-        projectView.classList.add("hide");
-        usersTable.style.display = "block";
-        addNewUser.classList.remove("hide");
-        document.body.style.backgroundColor = "white";
-    }
-});
 
 
 function deleteUser() {
@@ -179,10 +124,11 @@ function deleteUser() {
 deleteUser();
 
 
+let editUserBtn = document.querySelectorAll(".edit-icon");
+let addUser = document.getElementById("register-form");
+let addNewUser = document.getElementById("addNewUser");
 function editUser() {
-    let editUser = document.querySelectorAll(".edit-icon");
-    let addUser = document.getElementById("register-form");
-    for (eachDeleteButton of editUser) {
+    for (eachDeleteButton of editUserBtn) {
         eachDeleteButton.addEventListener("click", (e) => {
             let tableRow = e.target.closest("tr");
             addUser.classList.remove("hide");
@@ -214,7 +160,6 @@ function editUser() {
 
                             localStorage.setItem("user", JSON.stringify(fetchusersData));
                         }
-                        addUser.classList.add("hide");
 
                     });
                 }
@@ -224,14 +169,21 @@ function editUser() {
 
 }
 
+let cancelButton = document.getElementById("cancel-button");
+cancelButton.addEventListener("click", () => {
+    addUser.classList.add("hide");
+    usersTable.classList.remove("hide");
+    usersMainHeading.classList.remove("hide");
+    addNewUser.classList.remove("hide");
+})
+
 editUser();
 
 let data = JSON.parse(localStorage.getItem("user"));
-let projects = JSON.parse(localStorage.getItem("projects"));
+let searchContainer = document.getElementById("searchContainer");
 
-function search() {
+function searchUser() {
     let searchBar = document.getElementById("search");
-    let searchContainer = document.getElementById("searchContainer");
     let noResultsFound = true;
 
     searchBar.addEventListener("input", () => {
@@ -248,62 +200,55 @@ function search() {
         addNewUser.classList.add("hide");
 
         data.forEach((userData) => {
-            projects.forEach((projectData) => {
-                if (
-                    userData.firstName.toLowerCase().includes(inputData) ||
-                    userData.lastName.toLowerCase().includes(inputData) ||
-                    userData.userEmail.toLowerCase().includes(inputData) ||
-                    projectData.projectNameData.toLowerCase().includes(inputData) ||
-                    projectData.projectDescription.toLowerCase().includes(inputData)
-                ) {
+            if (
+                userData.firstName.toLowerCase().includes(inputData) ||
+                userData.lastName.toLowerCase().includes(inputData) ||
+                userData.userEmail.toLowerCase().includes(inputData) ||
+                userData.userPhone.toLowerCase().includes(inputData)
+            ) {
+                let combinedRow = {
+                    user: userData
+                };
 
-                    if (userData.id === projectData.projectID) {
-                        let combinedRow = {
-                            user: userData,
-                            project: projectData
-                        };
-
-                        searchResults.push(combinedRow);
-                        noResultsFound = false;
-                    }
-                }
-            });
+                searchResults.push(combinedRow);
+                noResultsFound = false;
+            }
         });
 
         let tableRow = document.createElement("tr");
         let userName = document.createElement("th");
         let userEmail = document.createElement("th");
-        let userProjects = document.createElement("th");
+        let userPhone = document.createElement("th");
 
         tableRow.classList.add("main-row");
 
         userName.innerHTML = "Name";
         userEmail.innerHTML = "Email";
-        userProjects.innerHTML = "Projects";
+        userPhone.innerHTML = "Phone";
 
         searchContainer.appendChild(tableRow);
         tableRow.appendChild(userName);
         tableRow.appendChild(userEmail);
-        tableRow.appendChild(userProjects);
+        tableRow.appendChild(userPhone);
 
         if (searchResults.length > 0) {
             searchResults.forEach((result) => {
-                console.log(result);
+                // console.log(result);
                 let dataRow = document.createElement("tr");
                 dataRow.classList.add("table-row");
 
                 let nameData = document.createElement("td");
                 let emailData = document.createElement("td");
-                let projectData = document.createElement("td");
+                let phoneData = document.createElement("td");
 
                 // Access user and project data from the combined row
                 nameData.innerHTML = result.user.firstName + " " + result.user.lastName;
                 emailData.innerHTML = result.user.userEmail;
-                projectData.innerHTML = result.project.projectNameData;
+                phoneData.innerHTML = result.user.userPhone;
 
                 dataRow.appendChild(nameData);
                 dataRow.appendChild(emailData);
-                dataRow.appendChild(projectData);
+                dataRow.appendChild(phoneData);
                 searchContainer.appendChild(dataRow);
             });
         } else if (noResultsFound) {
@@ -314,10 +259,23 @@ function search() {
     });
 }
 
-search();
+searchUser();
+
+let crossSearch = document.getElementById("cross-search");
+crossSearch.addEventListener("click", () => {
+    searchContainer.classList.add("none");
+    usersMainHeading.classList.remove("hide");
+    usersTable.classList.remove("hide");
+    usersTable.style.display = "block";
+    addNewUser.classList.remove("hide");
+    searchContainerProjects.classList.add("none");
+    projectsTable.classList.remove("hide");
+    projectsTable.style.display = "block";
+})
 
 
 document.addEventListener("click", (e) => {
+    let searchBar = document.getElementById("search");
     let selectedElement = e.target;
     if (!selectedElement.classList.contains("searchTable")) {
         searchContainer.classList.add("none");
@@ -327,3 +285,205 @@ document.addEventListener("click", (e) => {
         searchBar.value = "";
     }
 })
+
+
+// Projects
+
+let projectsTab = document.getElementById("projectsTab");
+projectsTab.addEventListener("click", () => {
+    projectsTab.style.color = "#1d3be3";
+    usersTab.style.color = "#000";
+    let usersDiv = document.getElementById("usersDiv");
+    let projectsDiv = document.getElementById("projectsDiv");
+
+    usersDiv.classList.add("hide");
+    projectsDiv.classList.remove("hide");
+
+    viewFullProject();
+    searchProject();
+})
+
+let projectView = document.getElementById("mainDiv");
+function viewFullProject() {
+    let view = document.querySelectorAll(".view-icon");
+
+    for (let viewProjectIcon of view) {
+        // console.log("hello");
+        viewProjectIcon.addEventListener("click", (e) => {
+
+            projectView.classList.remove("hide");
+            document.body.style.backgroundColor = "rgba(173, 173, 173, 0.171)";
+
+            let listContent = e.target.closest('li').textContent;
+
+            for (let eachproject of fetchusersProject) {
+
+                if (eachproject.projectNameData === listContent) {
+                    let projectImage = document.getElementById("projectImage");
+                    let projectHeading = document.getElementById("projectHeading");
+                    let pDescription = document.getElementById("projectDescription");
+                    let seeLive = document.getElementById("seeLive");
+                    let repoLink = document.getElementById("repoLink");
+
+
+                    projectImage.setAttribute('src', eachproject.projectImg);
+                    projectHeading.innerHTML = eachproject.projectNameData;
+                    pDescription.innerHTML = eachproject.projectDescription;
+                    seeLive.setAttribute('href', eachproject.projectLiveLink);
+                    repoLink.setAttribute('href', eachproject.projectRepo);
+                }
+            }
+        });
+    }
+}
+
+let projects = JSON.parse(localStorage.getItem("projects"));
+let user = JSON.parse(localStorage.getItem("user"));
+let searchContainerProjects = document.getElementById("searchContainerProjects");
+
+function searchProject() {
+    let projectsTable = document.getElementById("projectsTable");
+    let searchBar = document.getElementById("search");
+    let noResultsFound = true;
+    searchBar.addEventListener("input", () => {
+        let inputData = searchBar.value.toLowerCase();
+        let searchResults = [];
+
+        searchContainerProjects.innerHTML = "";
+        noResultsFound = true;
+
+        searchContainerProjects.classList.remove("none");
+        projectsTable.classList.add("hide");
+        projectsTable.style.display = "none";
+
+        projects.forEach((projectData) => {
+            if (
+                projectData.projectNameData.toLowerCase().includes(inputData) ||
+                projectData.projectDescription.toLowerCase().includes(inputData)
+            ) {
+
+                let combinedRow = {
+                    project: projectData
+                };
+
+                searchResults.push(combinedRow);
+                noResultsFound = false;
+            }
+        });
+
+        let tableRow = document.createElement("tr");
+        let userEmail = document.createElement("th");
+        let userProjects = document.createElement("th");
+
+        tableRow.classList.add("main-row");
+
+        userEmail.innerHTML = "Email";
+        userProjects.innerHTML = "Projects";
+
+        searchContainerProjects.appendChild(tableRow);
+
+        tableRow.appendChild(userEmail);
+        tableRow.appendChild(userProjects);
+
+        if (searchResults.length > 0) {
+            searchResults.forEach((result) => {
+                console.log(result);
+                let dataRow = document.createElement("tr");
+                dataRow.classList.add("table-row");
+
+                let emailData = document.createElement("td");
+                let projectData = document.createElement("td");
+
+                user.forEach((userData) => {
+                    if (userData.id === result.project.projectID) {
+                        emailData.innerHTML = userData.userEmail;
+                        projectData.innerHTML = result.project.projectNameData;
+
+                        dataRow.appendChild(emailData);
+                        dataRow.appendChild(projectData);
+                        searchContainerProjects.appendChild(dataRow);
+                    }
+                })
+
+
+            });
+        } else if (noResultsFound) {
+            let noResultsItem = document.createElement("li");
+            noResultsItem.textContent = "No results found.";
+            searchContainerProjects.appendChild(noResultsItem);
+        }
+    });
+}
+
+
+
+let crossViewProject = document.getElementById("cross-view-project");
+crossViewProject.addEventListener("click", () => {
+    projectView.classList.add("hide");
+    usersTable.style.display = "block";
+    addNewUser.classList.remove("hide");
+    document.body.style.backgroundColor = "white";
+})
+
+
+let projectsTable = document.getElementById("projectsTable");
+let tableRowProjects = document.createElement("tr");
+let userEmailProjects = document.createElement("th");
+let userProjects = document.createElement("th");
+
+tableRowProjects.classList.add("main-row");
+
+userEmailProjects.innerHTML = "Email";
+userProjects.innerHTML = "Projects";
+
+projectsTable.appendChild(tableRowProjects);
+
+tableRowProjects.appendChild(userEmailProjects);
+tableRowProjects.appendChild(userProjects);
+
+
+for (let eachuser of fetchusersData) {
+    let dataRow = document.createElement("tr");
+
+    dataRow.classList.add("table-row");
+
+    let emailData = document.createElement("td");
+    let projectData = document.createElement("td");
+
+    if (eachuser.userEmail !== "admin123@gmail.com") {
+
+        emailData.innerHTML = eachuser.userEmail;
+        dataRow.appendChild(emailData);
+
+        for (let eachproject of fetchusersProject) {
+            if (eachuser.id === eachproject.projectID) {
+
+                let projectsList = document.createElement("ul");
+                let listData = document.createElement("li");
+
+                projectData.classList.add("project-data");
+                projectsList.classList.add("project-ul");
+                listData.classList.add("project-li");
+
+                listData.innerHTML = eachproject.projectNameData;
+
+                let viewIconDiv = document.createElement("div");
+                let viewIcon = document.createElement("img");
+
+                viewIcon.setAttribute("src", "../../Portfolio Website/assets/editable-icon/eye.png");
+                viewIconDiv.classList.add("view-icon-div")
+                viewIcon.classList.add("view-icon");
+
+                projectData.appendChild(projectsList);
+
+                viewIconDiv.appendChild(viewIcon);
+                listData.appendChild(viewIconDiv);
+                projectsList.appendChild(listData);
+                dataRow.appendChild(projectData);
+            }
+
+        }
+
+        projectsTable.appendChild(dataRow);
+    }
+}
